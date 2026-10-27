@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Registro Estudiantil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 10px;
+        }
+        .campo { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; color: #333333; }
+        input, select {
+            padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+            font-size: 0.95rem; width: 100%; box-sizing: border-box;
+        }
+        input:focus, select:focus { outline: none; border-color: #2563eb; }
+        button {
+            width: 100%; padding: 12px; background-color: #2563eb; color: white;
+            border: none; border-radius: 5px; font-size: 1rem; font-weight: bold;
+            cursor: pointer; margin-top: 10px; transition: background-color 0.2s;
+        }
+        button:hover { background-color: #1d4ed8; }
+        .oculta { display: none; }
+        .alerta {
+            background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+            padding: 10px; border-radius: 5px; margin-bottom: 15px;
+            font-weight: bold; text-align: center;
+        }
+        .tarjeta-resultado {
+            margin-top: 25px; background-color: #f0fdf4; border: 1px solid #86efac;
+            padding: 15px; border-radius: 6px; overflow-wrap: anywhere;
+        }
+        .tarjeta-resultado h2 { color: #166534; font-size: 1.1rem; margin-top: 0; text-align: center; }
+        .tarjeta-resultado p { margin: 6px 0; color: #1e293b; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>REGISTRO ESTUDIANTIL</h1>
+        <div id="mensajeAlerta" class="alerta oculta" role="alert"></div>
+        <form id="formRegistro">
+            <div class="campo">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ej. Ana María López" autocomplete="name" required>
+            </div>
+            <div class="campo">
+                <label for="nie">NIE:</label>
+                <input type="text" id="nie" name="nie" placeholder="Ej. 1234567" required>
+            </div>
+            <div class="campo">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" min="12" max="25" placeholder="Ej. 16" required>
+            </div>
+            <div class="campo">
+                <label for="grado">Grado:</label>
+                <select id="grado" name="grado" required>
+                    <option value="">Seleccionar ▼</option>
+                    <option value="1.er Año de Bachillerato">1.er Año de Bachillerato</option>
+                    <option value="2.o Año de Bachillerato">2.o Año de Bachillerato</option>
+                    <option value="3.er Año de Bachillerato">3.er Año de Bachillerato</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="seccion">Sección:</label>
+                <select id="seccion" name="seccion" required>
+                    <option value="">Seleccionar ▼</option>
+                    <option value="A">Sección A</option>
+                    <option value="B">Sección B</option>
+                    <option value="C">Sección C</option>
+                    <option value="D">Sección D</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" placeholder="estudiante@ejemplo.com" autocomplete="email" required>
+            </div>
+            <div class="campo">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="Ej. 7000-0000" autocomplete="tel" required>
+            </div>
+            <button type="submit">REGISTRAR ESTUDIANTE</button>
+        </form>
+        <section id="resultado" class="tarjeta-resultado oculta" aria-live="polite"></section>
+    </main>
+    <script>
+        const formRegistro = document.getElementById('formRegistro');
+        const mensajeAlerta = document.getElementById('mensajeAlerta');
+        const resultado = document.getElementById('resultado');
+
+        formRegistro.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const nie = document.getElementById('nie').value.trim();
+            const edad = document.getElementById('edad').value.trim();
+            const grado = document.getElementById('grado').value;
+            const seccion = document.getElementById('seccion').value;
+            const correo = document.getElementById('correo').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+
+            if (!nombre || !nie || !edad || !grado || !seccion || !correo || !telefono) {
+                mensajeAlerta.textContent = 'Debe completar todos los campos.';
+                mensajeAlerta.classList.remove('oculta');
+                resultado.classList.add('oculta');
+                return;
+            }
+
+            const edadNumero = Number(edad);
+            if (!Number.isInteger(edadNumero) || edadNumero < 12 || edadNumero > 25) {
+                mensajeAlerta.textContent = 'La edad debe ser un número entero entre 12 y 25.';
+                mensajeAlerta.classList.remove('oculta');
+                resultado.classList.add('oculta');
+                return;
+            }
+
+            mensajeAlerta.classList.add('oculta');
+            resultado.replaceChildren();
+
+            const titulo = document.createElement('h2');
+            titulo.textContent = 'ESTUDIANTE REGISTRADO CORRECTAMENTE';
+            resultado.appendChild(titulo);
+
+            const datos = [
+                ['Nombre', nombre],
+                ['NIE', nie],
+                ['Edad', edad + ' años'],
+                ['Grado', grado],
+                ['Sección', seccion],
+                ['Correo', correo],
+                ['Teléfono', telefono]
+            ];
+
+            datos.forEach(([etiqueta, valor]) => {
+                const p = document.createElement('p');
+                const strong = document.createElement('strong');
+                strong.textContent = etiqueta + ': ';
+                p.append(strong, document.createTextNode(valor));
+                resultado.appendChild(p);
+            });
+
+            resultado.classList.remove('oculta');
+            formRegistro.reset();
+        });
+    </script>
+</body>
+</html>
